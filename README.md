@@ -1,7 +1,3 @@
-Claro! Aqui está uma versão aprimorada do seu `README.md` — mais clara, organizada e convidativa, mantendo o tom amigável e profissional:
-
----
-
 # 🎮 PkmRPG
 
 **PkmRPG** é um sistema de **RPG de mesa** (tabletop RPG) ambientado no universo Pokémon.
