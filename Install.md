@@ -20,7 +20,7 @@ Certifique-se de ter os seguintes itens instalados:
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/PkmRPG.git
+git clone https://github.com/EvertonMachado1/PkmRPG
 cd PkmRPG
 ```
 
