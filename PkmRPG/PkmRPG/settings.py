@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "play",
     "menage",
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [
