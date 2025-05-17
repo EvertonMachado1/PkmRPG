@@ -9,15 +9,14 @@ const dbConfig = {
   database: 'pkm'
 };
 
-// Middleware para garantir que o corpo da requisição seja JSON
 router.use(express.json());
 
-// Rota de teste para garantir que a API está funcionando
+// Rota de teste
 router.get('/teste', (req, res) => {
   res.json({ message: 'API funcionando!' });
 });
 
-// Rota POST para cadastrar usuário
+// Criar usuário
 router.post('/usuarios', async (req, res) => {
   const { nome, senha } = req.body;
 
@@ -27,34 +26,25 @@ router.post('/usuarios', async (req, res) => {
 
   try {
     const connection = await mysql.createConnection(dbConfig);
-
-    await connection.execute(
-      'INSERT INTO usuarios (nome, senha) VALUES (?, ?)',
-      [nome, senha]
-    );
-
+    await connection.execute('INSERT INTO usuarios (nome, senha) VALUES (?, ?)', [nome, senha]);
     await connection.end();
-
-    return res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
+    res.status(201).json({ message: 'Usuário cadastrado com sucesso!' });
   } catch (error) {
     console.error('Erro ao cadastrar usuário:', error);
-    return res.status(500).json({ detail: 'Erro ao cadastrar usuário' });
+    res.status(500).json({ detail: 'Erro ao cadastrar usuário' });
   }
 });
 
-// Rota para pegar usuários sem ficha
+// Jogadores sem ficha
 router.get('/jogadores_sem_ficha', async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
-
     const [rows] = await connection.execute(`
       SELECT u.id, u.nome FROM usuarios u
-      LEFT JOIN fichas f ON u.id = f.jogador_id
+      LEFT JOIN ficha f ON u.id = f.jogador_id
       WHERE f.jogador_id IS NULL
     `);
-
     await connection.end();
-
     res.json(rows);
   } catch (error) {
     console.error('Erro ao buscar usuários sem ficha:', error);
@@ -62,24 +52,21 @@ router.get('/jogadores_sem_ficha', async (req, res) => {
   }
 });
 
-// Rota para pegar todas as classes
-router.get('/classes', async (req, res) => {
+// Listar habilidades
+router.get('/habilidades', async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
-
-    const [rows] = await connection.execute('SELECT id_hab, hab_nome FROM classes');
-
+    const [rows] = await connection.execute('SELECT id_hab, hab_nome FROM habilidades');
     await connection.end();
-
     res.json(rows);
   } catch (error) {
-    console.error('Erro ao buscar classes:', error);
-    res.status(500).json({ detail: 'Erro ao buscar classes' });
+    console.error('Erro ao buscar habilidades:', error);
+    res.status(500).json({ detail: 'Erro ao buscar habilidades' });
   }
 });
 
-// Rota para criar ficha
-router.post('/fichas', async (req, res) => {
+// Criar ficha
+router.post('/ficha', async (req, res) => {
   const {
     jogador_id,
     classe_id,
@@ -110,38 +97,42 @@ router.post('/fichas', async (req, res) => {
   try {
     const connection = await mysql.createConnection(dbConfig);
 
-    // Verifica se usuário existe
+    // Verifica se jogador existe
     const [usuario] = await connection.execute('SELECT id FROM usuarios WHERE id = ?', [jogador_id]);
     if (usuario.length === 0) {
       await connection.end();
       return res.status(400).json({ detail: 'Usuário não encontrado.' });
     }
 
-    // Verifica se usuário já tem ficha
-    const [fichaExistente] = await connection.execute('SELECT id FROM fichas WHERE jogador_id = ?', [jogador_id]);
+    // Verifica se já tem ficha
+    const [fichaExistente] = await connection.execute('SELECT id FROM ficha WHERE jogador_id = ?', [jogador_id]);
     if (fichaExistente.length > 0) {
       await connection.end();
       return res.status(400).json({ detail: 'Usuário já possui ficha.' });
     }
 
     // Verifica se classe existe
-    const [classe] = await connection.execute('SELECT id_hab FROM classes WHERE id_hab = ?', [classe_id]);
+    const [classe] = await connection.execute('SELECT id_hab FROM habilidades WHERE id_hab = ?', [classe_id]);
     if (classe.length === 0) {
       await connection.end();
       return res.status(400).json({ detail: 'Classe não encontrada.' });
     }
 
-    // Insere ficha
-    const [resultado] = await connection.execute(
-      `INSERT INTO fichas
-       (jogador_id, classe_id, idade, nivel, poke, xp, forca, destreza, vontade, sorte, vida, defesa, percepcao, corrupcao, dmg)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [jogador_id, classe_id, idade, nivel, poke, xp, forca, destreza, vontade, sorte, vida, defesa, percepcao, corrupcao, dmg]
+    // Inserir ficha
+    const [resultado] = await connection.execute(`
+      INSERT INTO ficha (
+        jogador_id, classe_id, idade, nivel, poke, xp,
+        forca, destreza, vontade, sorte, vida, defesa,
+        percepcao, corrupcao, dmg
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [jogador_id, classe_id, idade, nivel, poke, xp,
+       forca, destreza, vontade, sorte, vida, defesa,
+       percepcao, corrupcao, dmg]
     );
 
     await connection.end();
-
     res.status(201).json({ message: 'Ficha criada com sucesso!', fichaId: resultado.insertId });
+    location.reload();
   } catch (error) {
     console.error('Erro ao criar ficha:', error);
     res.status(500).json({ detail: 'Erro interno do servidor.' });

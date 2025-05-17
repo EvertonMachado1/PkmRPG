@@ -113,7 +113,7 @@
     let habilidades = [];
 
     async function carregarClasses() {
-    const res = await fetch("/api/classes");
+    const res = await fetch("/api/habilidades");
     const habilidades = await res.json();
     const select = document.getElementById("classe");
 
@@ -214,7 +214,7 @@ async function salvarFicha() {
   };
 
   try {
-    const res = await fetch("/api/fichas", {
+    const res = await fetch("/api/ficha", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(dados)
