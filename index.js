@@ -2,9 +2,11 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const mysql = require('mysql2');
-
+const apiRoutes = require('/public/admin/api');
 const app = express();
 const PORT = 3000;
+
+app.use('/public/admin/api', apiRoutes);
 
 app.use(session({
   secret: '12345678',
