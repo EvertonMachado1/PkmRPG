@@ -2,7 +2,7 @@
 
 Este projeto é um trabalho de fã, sem fins lucrativos, criado para fins educacionais e de entretenimento.
 
-**Pokémon** é uma marca registrada de propriedade da **Nintendo**, **Game Freak**, e **The Pokémon Company**.  
+**Pokémon** é uma marca registrada de propriedade da **Nintendo**, **Creatures**, **Game Freak**, e **The Pokémon Company**.  
 Este projeto não é afiliado, endossado ou patrocinado por nenhuma dessas entidades.
 
 Todos os personagens, criaturas, nomes, logotipos e propriedades relacionados a Pokémon pertencem aos seus respectivos proprietários.
