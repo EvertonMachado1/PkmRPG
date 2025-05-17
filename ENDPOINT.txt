@@ -1,0 +1,2 @@
+migrei todo o banco e estou arrumando a parte de cadastro de ficha no usuario (nota: no banco esta "usuarios" no plural.
+tem que mudar tudo pra ficar igual do banco.)
