@@ -1,0 +1,23 @@
+{
+  "name": "pkmrpg",
+  "version": "1.0.0",
+  "description": "**PkmRPG** é um sistema de **RPG de mesa** (tabletop RPG) ambientado no universo Pokémon. O objetivo do projeto é transformar a experiência de ser um treinador Pokémon em uma aventura completa de interpretação, com mecânicas próprias para campanhas, exploração, batalhas, captura de criaturas e muito mais — tudo no estilo clássico dos RPGs de mesa.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvertonMachado1/PkmRPG.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvertonMachado1/PkmRPG/issues"
+  },
+  "homepage": "https://github.com/EvertonMachado1/PkmRPG#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
