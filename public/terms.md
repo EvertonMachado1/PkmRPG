@@ -29,6 +29,9 @@ Você pode:
 - Não use para fins comerciais
 - E compartilhe sob a mesma licença
 
+<br>
+
+# **“Este projeto está disponível gratuitamente e visa apenas homenagear a franquia Pokémon. Caso os detentores legais da marca solicitem sua remoção, ele será imediatamente retirado do repositório.”**
 ---
 
 <br>
