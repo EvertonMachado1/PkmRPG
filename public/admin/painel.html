@@ -41,9 +41,8 @@
       const conteudo = `
         <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-md">
           <h2 class="text-2xl font-bold mb-4 text-center">Cadastrar Novo Jogador</h2>
-          <input type="text" id="nome" placeholder="Nome do jogador" class="w-full border p-2 rounded mb-3 text-black" required>
-          <input type="text" id="login" placeholder="Login" class="w-full border p-2 rounded mb-3 text-black" required>
-          <input type="password" id="senha" placeholder="Senha" class="w-full border p-2 rounded mb-4 text-black" required>
+          <input type="text" id="nome" placeholder="Nome do jogador" class="w-full border p-2 rounded mb-3 text-white" required>
+          <input type="password" id="senha" placeholder="Senha" class="w-full border p-2 rounded mb-4 text-white" required>
           <button onclick="cadastrar()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded w-full">
             Cadastrar
           </button>
@@ -52,48 +51,46 @@
       document.getElementById("conteudoCentral").innerHTML = conteudo;
     }
 
-    async function cadastrar() {
-      const nomeInput = document.getElementById('nome');
-      const loginInput = document.getElementById('login');
-      const senhaInput = document.getElementById('senha');
-      const mensagem = document.getElementById('mensagem');
+   async function cadastrar() {
+    const nomeInput = document.getElementById('nome');
+    const senhaInput = document.getElementById('senha');
+    const mensagem = document.getElementById('mensagem');
 
-      if (!nomeInput || !loginInput || !senhaInput) {
-        mensagem.textContent = "❌ Erro interno: campos não encontrados.";
-        mensagem.style.color = "red";
-        return;
-      }
-
-      const nome = nomeInput.value.trim();
-      const login = loginInput.value.trim();
-      const senha = senhaInput.value.trim();
-
-      if (!nome || !login || !senha) {
-        mensagem.textContent = "❌ Preencha todos os campos.";
-        mensagem.style.color = "red";
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/usuarios', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome, login, senha })
-        });
-
-        if (response.ok) {
-          mensagem.textContent = "✅ Usuário cadastrado com sucesso!";
-          mensagem.style.color = "green";
-        } else {
-          const erro = await response.json();
-          mensagem.textContent = "❌ " + (erro.detail || "Erro desconhecido");
-          mensagem.style.color = "red";
-        }
-      } catch (error) {
-        mensagem.textContent = "❌ Falha ao conectar com o servidor.";
-        mensagem.style.color = "red";
-      }
+    if (!nomeInput || !senhaInput) {
+      mensagem.textContent = "❌ Erro interno: campos não encontrados.";
+      mensagem.style.color = "red";
+      return;
     }
+
+    const nome = nomeInput.value.trim();
+    const senha = senhaInput.value.trim();
+
+    if (!nome || !senha) {
+      mensagem.textContent = "❌ Preencha todos os campos.";
+      mensagem.style.color = "red";
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, senha })  // <== só nome e senha aqui
+      });
+
+      if (response.ok) {
+        mensagem.textContent = "✅ Usuário cadastrado com sucesso!";
+        mensagem.style.color = "green";
+      } else {
+        const erro = await response.json();
+        mensagem.textContent = "❌ " + (erro.detail || "Erro desconhecido");
+        mensagem.style.color = "red";
+      }
+    } catch (error) {
+      mensagem.textContent = "❌ Falha ao conectar com o servidor.";
+      mensagem.style.color = "red";
+    }
+  }
 
     async function carregarJogadoresSemFicha() {
   try {
