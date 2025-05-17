@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login do GM</title>
+  <link href="../css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center h-screen">
+  <form action="/admin/login" method="POST" class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm">
+    <h1 class="text-2xl font-bold text-center mb-6">Painel do GM</h1>
+
+    <label for="password" class="block mb-2 text-sm font-medium">Senha do GM</label>
+    <input
+      type="password"
+      id="password"
+      name="password"
+      required
+      class="w-full px-3 py-2 mb-4 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+    />
+
+    <button
+      type="submit"
+      class="w-full bg-yellow-600 hover:bg-yellow-700 py-2 rounded font-semibold transition-colors"
+    >
+      Entrar
+    </button>
+
+    <!-- Mensagem de erro opcional -->
+    <p id="erro" class="text-red-500 mt-4 text-sm text-center hidden">Senha incorreta</p>
+  </form>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error")) {
+      document.getElementById("erro").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel do GM</title>
+  <link href="./css/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-gray-800 p-4">
+    <div class="flex flex-col items-center">
+      <h1 class="text-xl font-bold mb-2">Painel do GM</h1>
+      <div class="flex gap-2 justify-center">
+        <button onclick="mostrarFormularioJogador()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+          Cadastrar Jogador
+        </button>
+        <button onclick="mostrarFormularioFicha()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+          Cadastrar Ficha
+        </button>
+        <button onclick="mostrarFormularioPokemon()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+          Cadastrar Pokémon
+        </button>
+        <button onclick="window.location.href='mestrar.html'" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+          Mestrar
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Corpo -->
+  <main class="flex flex-1 p-6 items-center justify-center">
+    <div id="conteudoCentral" class="w-full max-w-3xl flex justify-center"></div>
+  </main>
+
+  <script>
+    function mostrarFormularioJogador() {
+      const conteudo = `
+        <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-md">
+          <h2 class="text-2xl font-bold mb-4 text-center">Cadastrar Novo Jogador</h2>
+          <input type="text" id="nome" placeholder="Nome do jogador" class="w-full border p-2 rounded mb-3 text-black" required>
+          <input type="text" id="login" placeholder="Login" class="w-full border p-2 rounded mb-3 text-black" required>
+          <input type="password" id="senha" placeholder="Senha" class="w-full border p-2 rounded mb-4 text-black" required>
+          <button onclick="cadastrar()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded w-full">
+            Cadastrar
+          </button>
+          <p id="mensagem" class="text-center mt-3 text-sm"></p>
+        </div>`;
+      document.getElementById("conteudoCentral").innerHTML = conteudo;
+    }
+
+    async function cadastrar() {
+      const nomeInput = document.getElementById('nome');
+      const loginInput = document.getElementById('login');
+      const senhaInput = document.getElementById('senha');
+      const mensagem = document.getElementById('mensagem');
+
+      if (!nomeInput || !loginInput || !senhaInput) {
+        mensagem.textContent = "❌ Erro interno: campos não encontrados.";
+        mensagem.style.color = "red";
+        return;
+      }
+
+      const nome = nomeInput.value.trim();
+      const login = loginInput.value.trim();
+      const senha = senhaInput.value.trim();
+
+      if (!nome || !login || !senha) {
+        mensagem.textContent = "❌ Preencha todos os campos.";
+        mensagem.style.color = "red";
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/usuarios', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, login, senha })
+        });
+
+        if (response.ok) {
+          mensagem.textContent = "✅ Usuário cadastrado com sucesso!";
+          mensagem.style.color = "green";
+        } else {
+          const erro = await response.json();
+          mensagem.textContent = "❌ " + (erro.detail || "Erro desconhecido");
+          mensagem.style.color = "red";
+        }
+      } catch (error) {
+        mensagem.textContent = "❌ Falha ao conectar com o servidor.";
+        mensagem.style.color = "red";
+      }
+    }
+
+    async function carregarJogadoresSemFicha() {
+  try {
+    const res = await fetch("/api/jogadores_sem_ficha");
+    if (!res.ok) throw new Error("Erro ao buscar jogadores");
+    const jogadores = await res.json();
+    const select = document.getElementById("jogadorSelect");
+
+    jogadores.forEach(j => {
+      const opt = document.createElement("option");
+      opt.value = j.id;
+      opt.textContent = j.nome;
+      select.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("Erro ao carregar jogadores:", err);
+  }
+}
+
+    let habilidades = [];
+
+    async function carregarClasses() {
+    const res = await fetch("/api/classes");
+    const habilidades = await res.json();
+    const select = document.getElementById("classe");
+
+    habilidades.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c.id_hab;
+      opt.textContent = c.hab_nome;
+      select.appendChild(opt);
+    });
+  }
+
+    function mostrarFormularioFicha() {
+  const conteudo = `
+    <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-2xl">
+      <h1 class="text-2xl font-bold mb-6 text-center">Criar Nova Ficha</h1>
+
+      <div class="mb-4">
+        <label class="block mb-1">Nome do Jogador:</label>
+        <select id="jogadorSelect" class="w-full p-2 rounded bg-gray-700 text-white"></select>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-1">Classe:</label>
+        <select id="classe" class="w-full p-2 rounded bg-gray-700 text-white"></select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <input type="number" id="idade" placeholder="Idade" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="nvl" placeholder="Nível (default 0)" class="p-2 rounded bg-gray-700 text-white" value="0">
+        <input type="number" id="poke" placeholder="PokeReais (default 0)" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="xp" placeholder="XP (default 0)" class="p-2 rounded bg-gray-700 text-white" value="0">
+        <input type="number" id="forca" placeholder="Força" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="destreza" placeholder="Destreza" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="vontade" placeholder="Vontade" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="sorte" placeholder="Sorte" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="vida" placeholder="Vida" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="defesa" placeholder="Defesa" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="percepcao" placeholder="Percepção" class="p-2 rounded bg-gray-700 text-white">
+        <input type="number" id="corrupcao" placeholder="Corrupção" class="p-2 rounded bg-gray-700 text-white">
+      </div>
+
+      <input type="hidden" id="dmg" value="0">
+
+      <button onclick="salvarFicha()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded w-full">
+        Salvar Ficha
+      </button>
+
+      <p id="mensagemFicha" class="mt-4 text-center"></p>
+    </div>`;
+
+  document.getElementById("conteudoCentral").innerHTML = conteudo;
+  carregarClasses();
+  carregarJogadoresSemFicha();
+}
+
+async function salvarFicha() {
+  const jogador_id = document.getElementById("jogadorSelect").value;
+  const classe_id = document.getElementById("classe").value;
+  const idade = parseInt(document.getElementById("idade").value);
+  const nivel = parseInt(document.getElementById("nvl").value) || 0;
+  const poke = parseInt(document.getElementById("poke").value) || 0;
+  const xp = parseInt(document.getElementById("xp").value) || 0;
+  const forca = parseInt(document.getElementById("forca").value);
+  const destreza = parseInt(document.getElementById("destreza").value);
+  const vontade = parseInt(document.getElementById("vontade").value);
+  const sorte = parseInt(document.getElementById("sorte").value);
+  const vida = parseInt(document.getElementById("vida").value);
+  const defesa = parseInt(document.getElementById("defesa").value);
+  const percepcao = parseInt(document.getElementById("percepcao").value);
+  const corrupcao = parseInt(document.getElementById("corrupcao").value);
+  const dmg = 0; // valor padrão oculto
+
+  const mensagem = document.getElementById("mensagemFicha");
+
+  // Validação básica
+  if (!jogador_id || !classe_id || isNaN(idade)) {
+    mensagem.textContent = "❌ Preencha todos os campos obrigatórios.";
+    mensagem.style.color = "red";
+    return;
+  }
+
+  const dados = {
+    jogador_id: parseInt(jogador_id),
+    classe_id: parseInt(classe_id),
+    idade,
+    nivel,
+    poke,
+    xp,
+    forca,
+    destreza,
+    vontade,
+    sorte,
+    vida,
+    defesa,
+    percepcao,
+    corrupcao,
+    dmg
+  };
+
+  try {
+    const res = await fetch("/api/fichas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    });
+
+    if (res.ok) {
+      mensagem.textContent = "✅ Ficha criada com sucesso!";
+      mensagem.style.color = "green";
+    } else {
+      const erro = await res.json();
+      mensagem.textContent = "❌ " + (erro.detail || "Erro ao salvar ficha.");
+      mensagem.style.color = "red";
+    }
+  } catch (err) {
+    mensagem.textContent = "❌ Erro ao se comunicar com o servidor.";
+    mensagem.style.color = "red";
+  }
+}
+
+
+function mostrarFormularioPokemon() {
+  const conteudo = `
+    <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-3xl mx-auto">
+      <h1 class="text-2xl font-bold mb-6 text-center text-white">Cadastrar Novo Pokémon</h1>
+
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <input id="nomePoke" placeholder="Nome" class="p-2 rounded bg-gray-700 text-white" />
+        <input type="number" id="numPoke" placeholder="Nº Pokédex" class="p-2 rounded bg-gray-700 text-white" required />
+        <select id="tipo1" class="p-2 rounded bg-gray-700 text-white"></select>
+        <select id="tipo2" class="p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>
+        <input id="passiva" placeholder="Passiva" class="p-2 rounded bg-gray-700 text-white" />
+        <input id="passiva_oculta" placeholder="Passiva Oculta" class="p-2 rounded bg-gray-700 text-white" />
+        <input id="evolucao" placeholder="Evolução" class="p-2 rounded bg-gray-700 text-white" />
+        <input type="number" id="vidaPoke" placeholder="Vida" class="p-2 rounded bg-gray-700 text-white" />
+        <input type="number" id="atk" placeholder="Ataque" class="p-2 rounded bg-gray-700 text-white" />
+        <input type="number" id="def" placeholder="Defesa" class="p-2 rounded bg-gray-700 text-white" />
+        <input type="number" id="atk_esp" placeholder="Ataque Especial" class="p-2 rounded bg-gray-700 text-white" />
+        <input type="number" id="def_esp" placeholder="Defesa Especial" class="p-2 rounded bg-gray-700 text-white" />
+        <input type="number" id="vel" placeholder="Velocidade" class="p-2 rounded bg-gray-700 text-white" />
+        <input id="hab1" placeholder="Habilidade 1" class="p-2 rounded bg-gray-700 text-white" />
+        <input id="hab2" placeholder="Habilidade 2" class="p-2 rounded bg-gray-700 text-white" />
+        <input id="hab3" placeholder="Habilidade 3" class="p-2 rounded bg-gray-700 text-white" />
+        <input id="hab4" placeholder="Habilidade 4" class="p-2 rounded bg-gray-700 text-white" />
+      </div>
+
+      <h2 class="text-lg font-semibold text-white mb-2">Fraquezas:</h2>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        ${[...Array(9)].map(() =>
+          `<select class="fraco p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>`
+        ).join('')}
+      </div>
+
+      <h2 class="text-lg font-semibold text-white mb-2">Resistências:</h2>
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        ${[...Array(9)].map(() =>
+          `<select class="forte p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>`
+        ).join('')}
+      </div>
+
+      <button onclick="salvarPokemon()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded w-full text-white font-semibold">
+        Salvar Pokémon
+      </button>
+      <p id="mensagemPokemon" class="mt-4 text-center text-white"></p>
+    </div>
+  `;
+
+  document.getElementById("conteudoCentral").innerHTML = conteudo;
+
+  // Carrega os tipos para os selects
+  carregarTipos("tipo1");
+  carregarTipos("tipo2");
+  document.querySelectorAll(".fraco").forEach(el => carregarTipos(null, el));
+  document.querySelectorAll(".forte").forEach(el => carregarTipos(null, el));
+}
+
+function carregarTipos(id = null, el = null) {
+  const tipos = [
+    "Normal", "Fogo", "Água", "Grama", "Elétrico", "Gelo", "Lutador",
+    "Venenoso", "Terrestre", "Voador", "Psíquico", "Inseto", "Pedra",
+    "Fantasma", "Dragão", "Sombrio", "Aço", "Fada"
+  ];
+  const select = el || document.getElementById(id);
+  tipos.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    select.appendChild(opt);
+  });
+}
+
+async function salvarPokemon() {
+  const nome = document.getElementById("nomePoke").value.trim();
+  const numero_pokedex_raw = document.getElementById("numPoke").value.trim();
+  const numero_pokedex = parseInt(numero_pokedex_raw);
+
+  const tipo1 = document.getElementById("tipo1").value;
+  const tipo2 = document.getElementById("tipo2").value || null;
+  const passiva = document.getElementById("passiva").value.trim();
+  const passiva_oculta = document.getElementById("passiva_oculta").value.trim();
+  const evolucao = document.getElementById("evolucao").value.trim();
+  const vida = parseInt(document.getElementById("vidaPoke").value) || 0;
+  const ataque = parseInt(document.getElementById("atk").value) || 0;
+  const defesa = parseInt(document.getElementById("def").value) || 0;
+  const ataque_especial = parseInt(document.getElementById("atk_esp").value) || 0;
+  const defesa_especial = parseInt(document.getElementById("def_esp").value) || 0;
+  const velocidade = parseInt(document.getElementById("vel").value) || 0;
+  const hab1 = document.getElementById("hab1").value.trim();
+  const hab2 = document.getElementById("hab2").value.trim();
+  const hab3 = document.getElementById("hab3").value.trim();
+  const hab4 = document.getElementById("hab4").value.trim();
+
+  const fracos = [...document.querySelectorAll(".fraco")].map(f => f.value || null);
+  const fortes = [...document.querySelectorAll(".forte")].map(f => f.value || null);
+
+  const mensagem = document.getElementById("mensagemPokemon");
+
+  if (!nome || isNaN(numero_pokedex)) {
+    mensagem.textContent = "❌ Nome e Nº Pokédex são obrigatórios e devem ser válidos.";
+    mensagem.style.color = "red";
+    return;
+  }
+
+  const dados = {
+    nome,
+    numero_pokedex,
+    tipo1,
+    tipo2,
+    passiva,
+    passiva_oculta,
+    evolucao,
+    vida,
+    ataque,
+    defesa,
+    ataque_especial,
+    defesa_especial,
+    velocidade,
+    hab1,
+    hab2,
+    hab3,
+    hab4,
+    fraco1: fracos[0],
+    fraco2: fracos[1],
+    fraco3: fracos[2],
+    fraco4: fracos[3],
+    fraco5: fracos[4],
+    fraco6: fracos[5],
+    fraco7: fracos[6],
+    fraco8: fracos[7],
+    fraco9: fracos[8],
+    resistente1: fortes[0],
+    resistente2: fortes[1],
+    resistente3: fortes[2],
+    resistente4: fortes[3],
+    resistente5: fortes[4],
+    resistente6: fortes[5],
+    resistente7: fortes[6],
+    resistente8: fortes[7],
+    resistente9: fortes[8],
+  };
+
+  try {
+    const res = await fetch("/api/pokemons", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    });
+
+    if (res.ok) {
+      mensagem.textContent = "✅ Pokémon cadastrado com sucesso!";
+      mensagem.style.color = "green";
+    } else {
+      const erro = await res.json();
+      mensagem.textContent = "❌ " + (erro.detail || "Erro ao salvar Pokémon.");
+      mensagem.style.color = "red";
+    }
+  } catch (err) {
+    mensagem.textContent = "❌ Erro ao se comunicar com o servidor.";
+    mensagem.style.color = "red";
+  }
+}
+
+  </script>
+</body>
+</html>
