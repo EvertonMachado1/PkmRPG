@@ -34,13 +34,12 @@ app.use('/admin', (req, res, next) => {
 });
 
 // Rota POST login
-app.post('/game/login', (req, res) => {
-  const { nome, senha } = req.body;
-  console.log('Tentando login com:', nome, senha);
+app.post('/admin/login', (req, res) => {
+  const { password } = req.body;
 
   connection.query(
     'SELECT * FROM usuarios WHERE nome = ? AND senha = ?',
-    [nome, senha],
+    ['gm', password],
     (err, results) => {
       if (err) {
         console.error('Erro ao consultar MySQL:', err);
@@ -49,9 +48,9 @@ app.post('/game/login', (req, res) => {
       console.log('Resultados da query:', results);
       if (results.length > 0) {
         req.session.isAdmin = true;
-        return res.redirect('/game/jogo.html');
+        return res.redirect('/admin/painel.html');
       }
-      res.redirect('/game/login.html?error=1');
+      res.redirect('/admin/login.html?error=1');
     }
   );
 });
@@ -66,7 +65,7 @@ app.get('/admin/logout', (req, res) => {
 
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware para proteger /admin
+// Middleware para proteger /game
 app.use('/game', (req, res, next) => {
   if (req.path === '/login.html' || (req.method === 'POST' && req.path === '/login')) {
     return next();
