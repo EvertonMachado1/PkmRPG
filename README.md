@@ -11,7 +11,7 @@ O objetivo do projeto é transformar a experiência de ser um treinador Pokémon
 * 🧾 **Fichas personalizáveis** para personagens e Pokémon
 * 🎲 **Mecânicas de jogo** para batalhas, evolução, captura e interações com o mundo
 * 🗺️ **Aventuras prontas** e ferramentas úteis para mestres e jogadores
-* ⚙️ **Recursos de integração** com plataformas como Roll20, Foundry VTT, etc.
+* ⚙️ **Recursos de integração** com plataformas como miro.
 
 ---
 
