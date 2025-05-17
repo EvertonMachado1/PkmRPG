@@ -74,7 +74,7 @@ app.use('/game', (req, res, next) => {
   if (req.path === '/login.html' || (req.method === 'POST' && req.path === '/login')) {
     return next();
   }
-  if (req.session.isAdmin) {
+  if (req.session.isPlayer) {
     return next();
   }
   return res.redirect('/game/login.html');
@@ -82,19 +82,17 @@ app.use('/game', (req, res, next) => {
 
 // Rota POST login
 app.post('/game/login', (req, res) => {
-  const { password } = req.body;
-  const { nome } = req.body;
-
+  const { senha, nome } = req.body;
   connection.query(
     'SELECT * FROM usuarios WHERE nome = ? AND senha = ?',
-  [nome, password],
+  [nome, senha],
     (err, results) => {
       if (err) {
         console.error('Erro ao consultar MySQL:', err);
         return res.status(500).send('Erro interno no servidor');
       }
       if (results.length > 0) {
-        req.session.isAdmin = true;
+        req.session.isPlayer = true;
         return res.redirect('/game/jogo.html');
       }
       res.redirect('/game/login.html?error=1');
