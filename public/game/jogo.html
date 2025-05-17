@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>PkmRPG - TableTop Game</title>
+  <link href="../css/output.css" rel="stylesheet" />
+</head>
+
+<body class="bg-gray-900 text-white h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-gray-800 p-4 flex items-center justify-between">
+    <!-- Nome do jogador -->
+    <div id="nomeUsuario" class="font-bold text-lg"></div>
+
+    <!-- Botões de ações -->
+    <div class="flex gap-2">
+      <button id="btnMapa" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">Mapa</button>
+      <button id="btnInventario" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">Inventário</button>
+      <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">PokéBag</button>
+      <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">Missões</button>
+      <button id="btnFicha" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">Ficha</button>
+      <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded">PC</button>
+    </div>
+
+    <!-- Botão de sair -->
+    <button onclick="sair()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded">Sair</button>
+  </header>
+
+  <!-- Corpo -->
+  <main class="flex flex-1">
+
+    <!-- Área principal -->
+    <div class="flex-1 p-4 border-r border-gray-700">
+
+      <!-- Painel de Ficha -->
+      <div id="painelFicha"
+        class="hidden absolute top-20 left-1/2 transform -translate-x-1/2 bg-gray-800 border border-gray-700 p-4 rounded-lg w-96 z-50">
+        <h2 class="text-xl font-bold mb-2">Ficha do Jogador</h2>
+        <div id="conteudoFicha" class="text-sm text-gray-300 space-y-1"></div>
+      </div>
+
+      <!-- Ficha do Jogador em formato de tabela -->
+      <section id="fichaSection"
+        class="hidden bg-gray-800 border border-gray-700 p-6 rounded-xl shadow-lg mx-auto mt-6 w-full max-w-3xl">
+        <h2 class="text-2xl font-bold text-center mb-6 text-white border-b border-gray-600 pb-2">Ficha do Jogador</h2>
+
+        <table class="min-w-full text-sm text-white bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+          <tbody>
+            <!-- Linha 1: Info + Atributos -->
+            <tr class="border-b border-gray-700">
+              <!-- Info principal -->
+              <td class="p-4 w-1/2 align-top">
+                <p><strong>Nome:</strong> <span id="fichaNome"></span></p>
+                <p><strong>Classe:</strong> <span id="fichaClasse"></span></p>
+                <p><strong>Nível:</strong> <span id="fichaNivel"></span></p>
+                <p><strong>XP:</strong> <span id="fichaXP"></span></p>
+                <p><strong>Idade:</strong> <span id="fichaIdade"></span></p>
+                <p><strong>Pokémon Acompanhando:</strong> <span id="fichaPoke"></span></p>
+              </td>
+
+              <!-- Atributos -->
+              <td class="p-4 w-1/2 align-top">
+                <p><strong>Força:</strong> <span id="fichaForca"></span></p>
+                <p><strong>Destreza:</strong> <span id="fichaDestreza"></span></p>
+                <p><strong>Vontade:</strong> <span id="fichaVontade"></span></p>
+                <p><strong>Sorte:</strong> <span id="fichaSorte"></span></p>
+              </td>
+            </tr>
+
+            <!-- Linha 2: Status -->
+            <tr>
+              <td colspan="2" class="p-4">
+                <div class="grid grid-cols-2 gap-4">
+                  <!-- Vida Atual com barra -->
+                  <div>
+                    <p class="mb-1 font-bold">Vida Atual</p>
+                    <div class="flex items-center gap-2">
+                      <div class="w-full bg-gray-600 rounded h-4 overflow-hidden">
+                        <div id="barraVida" class="h-full bg-green-500" style="width: 100%;"></div>
+                      </div>
+                      <span id="textoVida" class="text-sm text-white whitespace-nowrap">0/0</span>
+                    </div>
+                  </div>
+
+                  <!-- Demais Status -->
+                  <div><strong>Defesa:</strong> <span id="fichaDefesa"></span></div>
+                  <div><strong>Percepção:</strong> <span id="fichaPercepcao"></span></div>
+                  <div><strong>Corrupção:</strong> <span id="fichaCorrupcao"></span></div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Habilidades -->
+            <tr>
+              <td colspan="2" class="p-4">
+                <div class="flex items-center justify-center mb-4">
+                  <div class="flex-grow border-t border-gray-600"></div>
+                  <span class="px-4 text-gray-300 text-sm font-medium">Habilidades</span>
+                  <div class="flex-grow border-t border-gray-600"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-sm text-gray-300">
+                  <p><strong>Passiva:</strong> <span id="habPassiva"></span></p>
+                  <p><strong>Hab 1:</strong> <span id="hab1"></span></p>
+                  <p><strong>Hab 2:</strong> <span id="hab2"></span></p>
+                  <p><strong>Hab 3:</strong> <span id="hab3"></span></p>
+                  <p><strong>Hab 4:</strong> <span id="hab4"></span></p>
+                  <p><strong>Hab 5:</strong> <span id="hab5"></span></p>
+                </div>
+              </td>
+            </tr>
+
+
+
+          </tbody>
+        </table>
+
+      </section>
+
+      <!-- Inventario -->
+      <div id="painelInventario" class="hidden mt-4 bg-gray-800 text-white rounded-lg p-4 border border-gray-700 w-full max-w-2xl">
+        <h2 class="text-xl font-bold mb-3">Inventário</h2>
+        <div id="listaItens" class="space-y-2">
+          <div id="inventario-pokemon" class="p-4 bg-white rounded shadow space-y-2">
+            <h2 class="text-lg font-bold">Itens Pokémon</h2>
+            <div id="lista-itens-pokemon" class="space-y-1"></div>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- Miro -->
+      <div id="tableMiro"
+      class="hidden bg-gray-800 border border-gray-700 p-4 rounded-lg w-full max-w-[100%] h-full">
+        <h2 class="text-xl font-bold mb-2">Integração com Miro</h2>
+        <div id="conteudoMiro" class="text-sm text-gray-300 space-y-1 h-full">
+          <iframe
+          class="w-full h-[93%] rounded-lg" 
+          src="https://miro.com/app/live-embed/uXjVLCb_NbI=/?autoplay=true&moveToViewport=-23165,-5837,13803,7546" 
+          frameBorder="0" 
+          scrolling="no" 
+          allowFullScreen></iframe>
+        </div>
+  </div>
+
+
+    </div>
+
+    <!-- Lateral -->
+    <div class="w-[20%] p-4 flex flex-col max-h-[600px] overflow-hidden">
+      <!-- Rolagem de Dados -->
+      <div class="bg-gray-800 rounded-lg shadow-md text-white p-4">
+        <h3 class="text-lg font-semibold mb-2">Rolagem de Dados</h3>
+        <div class="grid grid-cols-5 gap-2 text-sm mb-2">
+          <button onclick="rolarDado(2)">d2</button>
+          <button onclick="rolarDado(3)">d3</button>
+          <button onclick="rolarDado(4)">d4</button>
+          <button onclick="rolarDado(6)">d6</button>
+          <button onclick="rolarDado(8)">d8</button>
+          <button onclick="rolarDado(10)">d10</button>
+          <button onclick="rolarDado(12)">d12</button>
+          <button onclick="rolarDado(20)">d20</button>
+          <button onclick="rolarDado(100)">d100</button>
+        </div>
+        <div class="flex items-center space-x-2">
+          <input id="modificador" type="number" placeholder="+/-" class="w-16 p-1 rounded text-black">
+          <span class="text-sm">Modificador</span>
+        </div>
+        <p class="mt-2 text-sm" id="resultadoDado"></p>
+      </div>
+
+      <!-- Rolagens recentes -->
+      <div class="mt-3">
+        <h3 class="text-sm font-semibold text-white mb-1">Rolagens recentes</h3>
+        <div id="chatDado"
+          class="bg-gray-800 p-2 rounded-lg text-sm text-white space-y-1 max-h-24 overflow-y-auto border border-gray-700">
+        </div>
+      </div>
+
+      <!-- Chat de texto -->
+      <div class="mt-3 flex flex-col flex-1">
+        <h3 class="text-lg font-semibold mb-1 text-white">Chat</h3>
+        <div id="chatMensagens"
+          class="bg-gray-800 p-2 rounded-lg text-sm space-y-1 border border-gray-700 flex-1 overflow-y-auto max-h-48">
+        </div>
+        <div class="flex mt-2 w-full max-w-full">
+          <input id="mensagem" type="text" placeholder="Digite sua mensagem..."
+            class="flex-1 p-2 rounded-l-lg text-black focus:outline-none min-w-0"
+            onkeydown="if(event.key === 'Enter') enviarMensagem()">
+          
+          <button onclick="enviarMensagem()"
+            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-r-lg whitespace-nowrap w-auto">Enviar</button>
+        </div>  
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-center p-2 text-sm text-gray-400">
+    2025 - Pokémon RPG TableTop - Fan made
+  </footer>
+
+  <script>
+    // Mostrar nome do usuário logado
+    const nome = localStorage.getItem('usuario_nome');
+    const id = localStorage.getItem('usuario_id');
+    document.getElementById('nomeUsuario').textContent = nome || "Jogador";
+
+    function sair() {
+      localStorage.clear();
+      window.location.href = '/game/logout';
+    }
+
+    function esconderTodosOsPaineis() {
+      document.getElementById("painelFicha").classList.add("hidden");
+    }
+
+    async function mostrarFicha() {
+      esconderTodasAsSeções();
+      const jogadorId = localStorage.getItem("usuario_id");
+      const nome = localStorage.getItem("usuario_nome");
+
+      if (!jogadorId) {
+        alert("Usuário não identificado.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:8000/api/fichas/${jogadorId}`);
+        if (!res.ok) throw new Error("Ficha não encontrada.");
+        const ficha = await res.json();
+
+        const resHab = await fetch(`http://localhost:8000/api/habilidades/${ficha.classe_id}`);
+        if (!resHab.ok) throw new Error("Habilidade não encontrada.");
+        const habilidade = await resHab.json();
+
+        document.getElementById("fichaNome").textContent = nome || "Sem nome";
+        document.getElementById("fichaClasse").textContent = habilidade.hab_nome;
+        document.getElementById("fichaNivel").textContent = ficha.nivel;
+        document.getElementById("fichaXP").textContent = ficha.xp;
+        document.getElementById("fichaIdade").textContent = ficha.idade;
+        document.getElementById("fichaPoke").textContent = ficha.poke;
+
+        document.getElementById("fichaForca").textContent = ficha.forca;
+        document.getElementById("fichaDestreza").textContent = ficha.destreza;
+        document.getElementById("fichaVontade").textContent = ficha.vontade;
+        document.getElementById("fichaSorte").textContent = ficha.sorte;
+
+        const vidaMaxima = ficha.vida;
+        const dano = ficha.dmg;
+        const vidaAtual = Math.max(vidaMaxima - dano, 0);
+
+        const barra = document.getElementById("barraVida");
+        const texto = document.getElementById("textoVida");
+
+        const porcentagem = (vidaAtual / vidaMaxima) * 100;
+        barra.style.width = `${porcentagem}%`;
+        barra.style.backgroundColor =
+          porcentagem > 66 ? "#22c55e" : porcentagem > 33 ? "#facc15" : "#ef4444";
+
+        texto.textContent = `${vidaAtual}/${vidaMaxima}`;
+        document.getElementById("fichaDefesa").textContent = ficha.defesa;
+        document.getElementById("fichaPercepcao").textContent = ficha.percepcao;
+        document.getElementById("fichaCorrupcao").textContent = ficha.corrupcao;
+
+        document.getElementById("habPassiva").textContent = habilidade.passiva;
+        document.getElementById("hab1").textContent = habilidade.hab1;
+        document.getElementById("hab2").textContent = habilidade.hab2;
+        document.getElementById("hab3").textContent = habilidade.hab3;
+        document.getElementById("hab4").textContent = habilidade.hab4;
+        document.getElementById("hab5").textContent = habilidade.hab5;
+
+        document.getElementById("fichaSection").classList.remove("hidden");
+      } catch (error) {
+        console.error("Erro ao buscar ficha:", error);
+        alert("Erro ao carregar ficha. Talvez ela ainda não tenha sido criada.");
+      }
+    }
+
+    function esconderTodasAsSeções() {
+      document.getElementById("fichaSection")?.classList.add("hidden");
+      document.getElementById("painelInventario")?.classList.add("hidden");
+      document.getElementById("tableMiro")?.classList.add("hidden");
+    }
+
+    let socket = new WebSocket("ws://localhost:8000/ws");
+
+    socket.onmessage = function (event) {
+      const msg = event.data;
+
+      // Se for uma rolagem, envia pro chatDado
+      if (msg.startsWith("🎲")) {
+        const chatDado = document.getElementById("chatDado");
+        const message = document.createElement("div");
+        message.innerHTML = estilizarRolagem(msg);
+        chatDado.appendChild(message);
+        chatDado.scrollTop = chatDado.scrollHeight;
+      }
+      // Se for mensagem normal, e não for a mesma enviada por você (para evitar duplicação)
+      else if (!msg.includes(`Você:`) && !msg.includes(`${nome}:`)) {
+        const chatMensagens = document.getElementById("chatMensagens");
+        const message = document.createElement("div");
+        message.textContent = `💬 ${msg}`;
+        chatMensagens.appendChild(message);
+        chatMensagens.scrollTop = chatMensagens.scrollHeight;
+      }
+    };
+
+    function enviarMensagem() {
+      const input = document.getElementById("mensagem");
+      const texto = input.value.trim();
+
+      if (texto !== "") {
+        socket.send(`${nome}: ${texto}`);
+        input.value = "";
+
+        const chatMensagens = document.getElementById("chatMensagens");
+        const mensagem = document.createElement("div");
+        mensagem.textContent = `Você: ${texto}`;
+        chatMensagens.appendChild(mensagem);
+        chatMensagens.scrollTop = chatMensagens.scrollHeight;
+      }
+    }
+
+    // Enviar com Enter
+    document.getElementById("mensagem").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        enviarMensagem();
+      }
+    });
+
+    function rolarDado(tipo) {
+      if (socket.readyState === WebSocket.OPEN) {
+        const modificador = parseInt(document.getElementById("modificador").value) || 0;
+        const expressao = `d${tipo}${modificador >= 0 ? `+${modificador}` : modificador}`;
+        const nome = localStorage.getItem('usuario_nome') || "Jogador";
+        socket.send(`/roll ${expressao}|${nome}`);
+      } else {
+        console.warn("⚠️ WebSocket não está conectado.");
+        document.getElementById("resultadoDado").textContent = "Erro: WebSocket desconectado.";
+      }
+    }
+
+    function estilizarRolagem(msg) {
+      const regexComMod = /^🎲 (.+?) rolou \|(.+?)\| → \|(\d+)\| ([+-]\d+)? = (\d+)$/;
+      const regexSemMod = /^🎲 (.+?) rolou \|(.+?)\| → \|(\d+)\| = (\d+)$/;
+
+      let match = msg.match(regexComMod);
+      if (match) {
+        const [, nome, expressao, valor, modificador = "", total] = match;
+        return `
+          <div class="p-3 bg-gray-800 text-white rounded-xl shadow-lg w-fit max-w-full flex flex-col gap-2 text-sm sm:text-base">
+            <div><strong>${nome}</strong> rolou <span class="bg-gray-700 text-green-300 px-2 py-1 rounded">${expressao}</span></div>
+            <div class="flex items-center gap-2">
+              <span class="bg-gray-700 px-2 py-1 rounded text-blue-300">🎲 ${valor}</span>
+              ${modificador ? `<span class="text-white">${modificador}</span>` : ""}
+              <span>=</span>
+              <span class="bg-green-600 px-2 py-1 rounded text-white font-bold">${total}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      match = msg.match(regexSemMod);
+      if (match) {
+        const [, nome, expressao, valor, total] = match;
+        return `
+          <div class="p-3 bg-gray-800 text-white rounded-xl shadow-lg w-fit max-w-full flex flex-col gap-2 text-sm sm:text-base">
+            <div><strong>${nome}</strong> rolou <span class="bg-gray-700 text-green-300 px-2 py-1 rounded">${expressao}</span></div>
+            <div class="flex items-center gap-2">
+              <span class="bg-gray-700 px-2 py-1 rounded text-blue-300">🎲 ${valor}</span>
+              <span>=</span>
+              <span class="bg-green-600 px-2 py-1 rounded text-white font-bold">${total}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      return `<div class="bg-gray-700 p-2 rounded">${msg}</div>`;
+    }
+
+    function mostrarInventario() {
+  esconderTodasAsSeções(); // Esconde outras seções se necessário
+
+  const painel = document.getElementById("painelInventario");
+  const visivel = !painel.classList.contains("hidden");
+
+  if (visivel) {
+    painel.classList.add("hidden");
+  } else {
+    painel.classList.remove("hidden");
+    carregarInventarioPokemon(); // Busca os dados ao abrir
+  }
+}
+
+//carregar inventario
+async function carregarInventarioPokemon() {
+  const usuarioId = localStorage.getItem("usuario_id");
+
+  if (!usuarioId) {
+    console.error("Usuário não está logado.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/inventario/pokemon/${usuarioId}`);
+    const dados = await res.json();
+
+    const container = document.getElementById("lista-itens-pokemon");
+    container.innerHTML = "";
+
+    if (!dados.length) {
+      container.innerHTML = "<p>Nenhum item encontrado.</p>";
+      return;
+    }
+
+    dados.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "border p-2 rounded bg-gray-100";
+      div.innerHTML = `<strong>${item.nome}</strong> x${item.quantidade}<br><small>${item.descricao || "Sem descrição"}</small>`;
+      container.appendChild(div);
+    });
+  } catch (err) {
+    console.error("Erro ao carregar inventário Pokémon:", err);
+  }
+}
+
+function carregarInventario() {
+  const usuarioId = localStorage.getItem("usuario_id");
+
+  if (!usuarioId) {
+    console.error("Usuário não está logado.");
+    return;
+  }
+
+  fetch(`/inventario?usuario_id=${usuarioId}`)
+    .then(response => response.json())
+    .then(data => {
+      const lista = document.getElementById("listaItens");
+      lista.innerHTML = "";
+
+      if (data.length === 0 || data.erro) {
+        lista.innerHTML = "<p class='text-gray-400'>Inventário vazio.</p>";
+        return;
+      }
+
+      data.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "bg-gray-700 p-3 rounded shadow";
+        div.innerHTML = `
+          <div class="flex justify-between">
+            <span class="font-semibold">${item.nome}</span>
+            <span class="text-sm text-gray-300">x${item.quantidade}</span>
+          </div>
+          <p class="text-sm text-gray-400 mt-1">${item.descricao || ""}</p>
+        `;
+        lista.appendChild(div);
+      });
+    })
+    .catch(err => {
+      console.error("Erro ao carregar inventário:", err);
+    });
+}
+
+
+//miro
+async function mostrarMiro() {
+  esconderTodasAsSeções();
+  document.getElementById("tableMiro").classList.remove("hidden");
+}
+
+    // Evento para mostrar
+    document.getElementById("btnFicha").addEventListener("click", mostrarFicha);
+    document.getElementById("btnInventario").addEventListener("click", mostrarInventario);
+    document.getElementById("btnMapa").addEventListener("click", mostrarMiro);
+  </script>
+
+
+
+</body>
+
+</html>

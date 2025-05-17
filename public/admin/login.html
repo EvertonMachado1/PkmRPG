@@ -29,11 +29,21 @@
     <p id="erro" class="text-red-500 mt-4 text-sm text-center hidden">Senha incorreta</p>
   </form>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("error")) {
-      document.getElementById("erro").classList.remove("hidden");
-    }
-  </script>
+<script>
+  const form = document.querySelector('form');
+  form.addEventListener('submit', e => {
+    console.log('Tentando enviar login...');
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("error")) {
+    document.getElementById("erro").classList.remove("hidden");
+  }
+
+  document.querySelector('form').addEventListener('submit', e => {
+  console.log('Form enviado, senha:', document.getElementById('password').value);
+});
+</script>
+
 </body>
 </html>
