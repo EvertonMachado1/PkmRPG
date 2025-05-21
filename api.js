@@ -146,8 +146,6 @@ router.post('/pokemons', async (req, res) => {
     numero_pokedex,
     tipo1,
     tipo2,
-    passiva,
-    passiva_oculta,
     evolucao,
     vida,
     ataque,
@@ -155,7 +153,6 @@ router.post('/pokemons', async (req, res) => {
     ataque_especial,
     defesa_especial,
     velocidade,
-    hab1, hab2, hab3, hab4,
     fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
     resistente1, resistente2, resistente3, resistente4, resistente5,
     resistente6, resistente7, resistente8, resistente9
@@ -170,19 +167,15 @@ router.post('/pokemons', async (req, res) => {
 
     await connection.execute(`
       INSERT INTO pokemon (
-        nome, numero_pokedex, tipo1, tipo2,
-        passiva, passiva_oculta, evolucao,
+        nome, numero_pokedex, tipo1, tipo2, evolucao,
         vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
-        hab1, hab2, hab3, hab4,
         fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
         resistente1, resistente2, resistente3, resistente4, resistente5,
         resistente6, resistente7, resistente8, resistente9
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
-      nome, numero_pokedex, tipo1, tipo2,
-      passiva, passiva_oculta, evolucao,
+      nome, numero_pokedex, tipo1, tipo2, evolucao,
       vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
-      hab1, hab2, hab3, hab4,
       fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
       resistente1, resistente2, resistente3, resistente4, resistente5,
       resistente6, resistente7, resistente8, resistente9

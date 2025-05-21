@@ -246,8 +246,6 @@ function mostrarFormularioPokemon() {
         <input type="number" id="numPoke" placeholder="Nº Pokédex" class="p-2 rounded bg-gray-700 text-white" required />
         <select id="tipo1" class="p-2 rounded bg-gray-700 text-white"></select>
         <select id="tipo2" class="p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>
-        <input id="passiva" placeholder="Passiva" class="p-2 rounded bg-gray-700 text-white" />
-        <input id="passiva_oculta" placeholder="Passiva Oculta" class="p-2 rounded bg-gray-700 text-white" />
         <input id="evolucao" placeholder="Evolução" class="p-2 rounded bg-gray-700 text-white" />
         <input type="number" id="vidaPoke" placeholder="Vida" class="p-2 rounded bg-gray-700 text-white" />
         <input type="number" id="atk" placeholder="Ataque" class="p-2 rounded bg-gray-700 text-white" />
@@ -255,10 +253,6 @@ function mostrarFormularioPokemon() {
         <input type="number" id="atk_esp" placeholder="Ataque Especial" class="p-2 rounded bg-gray-700 text-white" />
         <input type="number" id="def_esp" placeholder="Defesa Especial" class="p-2 rounded bg-gray-700 text-white" />
         <input type="number" id="vel" placeholder="Velocidade" class="p-2 rounded bg-gray-700 text-white" />
-        <input id="hab1" placeholder="Habilidade 1" class="p-2 rounded bg-gray-700 text-white" />
-        <input id="hab2" placeholder="Habilidade 2" class="p-2 rounded bg-gray-700 text-white" />
-        <input id="hab3" placeholder="Habilidade 3" class="p-2 rounded bg-gray-700 text-white" />
-        <input id="hab4" placeholder="Habilidade 4" class="p-2 rounded bg-gray-700 text-white" />
       </div>
 
       <h2 class="text-lg font-semibold text-white mb-2">Fraquezas:</h2>
@@ -313,8 +307,6 @@ async function salvarPokemon() {
 
   const tipo1 = document.getElementById("tipo1").value;
   const tipo2 = document.getElementById("tipo2").value || null;
-  const passiva = document.getElementById("passiva").value.trim();
-  const passiva_oculta = document.getElementById("passiva_oculta").value.trim();
   const evolucao = document.getElementById("evolucao").value.trim();
   const vida = parseInt(document.getElementById("vidaPoke").value) || 0;
   const ataque = parseInt(document.getElementById("atk").value) || 0;
@@ -343,8 +335,6 @@ async function salvarPokemon() {
     numero_pokedex,
     tipo1,
     tipo2,
-    passiva,
-    passiva_oculta,
     evolucao,
     vida,
     ataque,
@@ -352,10 +342,6 @@ async function salvarPokemon() {
     ataque_especial,
     defesa_especial,
     velocidade,
-    hab1,
-    hab2,
-    hab3,
-    hab4,
     fraco1: fracos[0],
     fraco2: fracos[1],
     fraco3: fracos[2],
