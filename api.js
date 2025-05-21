@@ -6,7 +6,10 @@ const dbConfig = {
   host: 'localhost',
   user: 'gm',
   password: '12345678',
-  database: 'pkm'
+  database: 'pkm',
+  ssl: {
+    rejectUnauthorized: false
+  }
 };
 
 router.use(express.json());
