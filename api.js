@@ -139,4 +139,63 @@ router.post('/ficha', async (req, res) => {
   }
 });
 
+// Rota para cadastrar um novo Pokémon
+router.post('/pokemons', async (req, res) => {
+  const {
+    nome,
+    numero_pokedex,
+    tipo1,
+    tipo2,
+    passiva,
+    passiva_oculta,
+    evolucao,
+    vida,
+    ataque,
+    defesa,
+    ataque_especial,
+    defesa_especial,
+    velocidade,
+    hab1, hab2, hab3, hab4,
+    fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
+    resistente1, resistente2, resistente3, resistente4, resistente5,
+    resistente6, resistente7, resistente8, resistente9
+  } = req.body;
+
+  if (!nome || !numero_pokedex) {
+    return res.status(400).json({ detail: 'Nome e número da Pokédex são obrigatórios.' });
+  }
+
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+
+    await connection.execute(`
+      INSERT INTO pokemon (
+        nome, numero_pokedex, tipo1, tipo2,
+        passiva, passiva_oculta, evolucao,
+        vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
+        hab1, hab2, hab3, hab4,
+        fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
+        resistente1, resistente2, resistente3, resistente4, resistente5,
+        resistente6, resistente7, resistente8, resistente9
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [
+      nome, numero_pokedex, tipo1, tipo2,
+      passiva, passiva_oculta, evolucao,
+      vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
+      hab1, hab2, hab3, hab4,
+      fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
+      resistente1, resistente2, resistente3, resistente4, resistente5,
+      resistente6, resistente7, resistente8, resistente9
+    ]);
+
+    await connection.end();
+
+    return res.status(201).json({ message: 'Pokémon cadastrado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao cadastrar Pokémon:', error);
+    return res.status(500).json({ detail: 'Erro ao cadastrar Pokémon.' });
+  }
+});
+
+
 module.exports = router;

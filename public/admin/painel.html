@@ -12,19 +12,19 @@
     <div class="flex flex-col items-center">
       <h1 class="text-xl font-bold mb-2">Painel do GM</h1>
       <div class="flex gap-2 justify-center">
-        <button onclick="mostrarFormularioJogador()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+        <button onclick="mostrarFormularioJogador()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded cursor-pointer">
           Cadastrar Jogador
         </button>
-        <button onclick="mostrarFormularioFicha()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+        <button onclick="mostrarFormularioFicha()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded cursor-pointer">
           Cadastrar Ficha
         </button>
-        <button onclick="mostrarFormularioPokemon()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+        <button onclick="mostrarFormularioPokemon()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded cursor-pointer">
           Cadastrar Pokémon
         </button>
-        <button onclick="window.location.href='mestrar.html'" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded">
+        <button onclick="window.location.href='mestrar.html'" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded cursor-pointer">
           Mestrar
         </button>
-        <button onclick="window.location.href='/admin/logout'" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white">
+        <button onclick="window.location.href='/admin/logout'" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white cursor-pointer">
         Logout
       </button>
       </div>
@@ -223,6 +223,7 @@ async function salvarFicha() {
     if (res.ok) {
       mensagem.textContent = "✅ Ficha criada com sucesso!";
       mensagem.style.color = "green";
+      setTimeout(() => location.reload(), 1500);
     } else {
       const erro = await res.json();
       mensagem.textContent = "❌ " + (erro.detail || "Erro ao salvar ficha.");
@@ -385,6 +386,7 @@ async function salvarPokemon() {
     if (res.ok) {
       mensagem.textContent = "✅ Pokémon cadastrado com sucesso!";
       mensagem.style.color = "green";
+      setTimeout(() => location.reload(), 1500);
     } else {
       const erro = await res.json();
       mensagem.textContent = "❌ " + (erro.detail || "Erro ao salvar Pokémon.");
