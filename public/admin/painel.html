@@ -5,6 +5,27 @@
   <title>Painel do GM</title>
   <link href="../css/output.css" rel="stylesheet">
 </head>
+<!-- style para o popup -->
+<style>
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-10px); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-fade-out {
+  animation: fade-out 0.5s ease-in forwards;
+}
+</style>
+
 <body class="bg-gray-900 text-white h-screen flex flex-col">
 
   <!-- Header -->
@@ -42,7 +63,11 @@
     <div id="conteudoCentral" class="w-full max-w-3xl flex justify-center"></div>
   </main>
 
-  <script>
+  <!-- popup -->
+  <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+<script>
+  
     function mostrarFormularioJogador() {
       const conteudo = `
         <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-md">
@@ -320,10 +345,6 @@ async function salvarPokemon() {
   const ataque_especial = parseInt(document.getElementById("atk_esp").value) || 0;
   const defesa_especial = parseInt(document.getElementById("def_esp").value) || 0;
   const velocidade = parseInt(document.getElementById("vel").value) || 0;
-  const hab1 = document.getElementById("hab1").value.trim();
-  const hab2 = document.getElementById("hab2").value.trim();
-  const hab3 = document.getElementById("hab3").value.trim();
-  const hab4 = document.getElementById("hab4").value.trim();
 
   const fracos = [...document.querySelectorAll(".fraco")].map(f => f.value || null);
   const fortes = [...document.querySelectorAll(".forte")].map(f => f.value || null);
@@ -376,34 +397,57 @@ async function salvarPokemon() {
     });
 
     if (res.ok) {
-      mensagem.textContent = "✅ Pokémon cadastrado com sucesso!";
-      mensagem.style.color = "green";
-      setTimeout(() => location.reload(), 1500);
+      mostrarToast("✅ Pokémon cadastrado com sucesso!", "sucesso");
     } else {
       const erro = await res.json();
-      mensagem.textContent = "❌ " + (erro.detail || "Erro ao salvar Pokémon.");
-      mensagem.style.color = "red";
+      mostrarToast("❌ Erro ao salvar Pokémon.", "erro");
     }
   } catch (err) {
-    mensagem.textContent = "❌ Erro ao se comunicar com o servidor.";
-    mensagem.style.color = "red";
+    mostrarToast("❌ Erro ao comunicar com servidor");
   }
 }
 
 function mostrarFormularioItem() {
-      const conteudo = `
-        <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-md">
-          <h2 class="text-2xl font-bold mb-4 text-center">Cadastrar Novo Jogador</h2>
-          <input type="text" id="nome" placeholder="Nome do jogador" class="w-full border p-2 rounded mb-3 text-white" required>
-          <input type="password" id="senha" placeholder="Senha" class="w-full border p-2 rounded mb-4 text-white" required>
-          <button onclick="cadastrar()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded w-full">
-            Cadastrar
-          </button>
-          <p id="mensagem" class="text-center mt-3 text-sm"></p>
-        </div>`;
-      document.getElementById("conteudoCentral").innerHTML = conteudo;
-    }
+  const conteudo = `
+    <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-4 text-center">Cadastrar Novo Jogador</h2>
+      <input type="text" id="nome" placeholder="Nome do jogador" class="w-full border p-2 rounded mb-3 text-white" required>
+      <input type="password" id="senha" placeholder="Senha" class="w-full border p-2 rounded mb-4 text-white" required>
+      <button onclick="cadastrar()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded w-full">
+        Cadastrar
+      </button>
+      <p id="mensagem" class="text-center mt-3 text-sm"></p>
+    </div>`;
+  document.getElementById("conteudoCentral").innerHTML = conteudo;
+}
 
-  </script>
+function mostrarToast(mensagem, tipo = "info") {
+  const container = document.getElementById("toast-container");
+  const cor = tipo === "sucesso" ? "bg-green-600" : tipo === "erro" ? "bg-red-600" : "bg-gray-700";
+
+  const toast = document.createElement("div");
+  toast.className = `${cor} relative text-white px-4 py-3 rounded shadow-md animate-fade-in flex items-center justify-between`;
+
+  const texto = document.createElement("span");
+  texto.textContent = mensagem;
+
+  const botaoFechar = document.createElement("button");
+  botaoFechar.innerHTML = "❌";
+  botaoFechar.className = "ml-4 text-white hover:text-gray-300 font-bold";
+  botaoFechar.onclick = () => location.reload(); // <-- recarrega a página ao clicar
+
+  toast.appendChild(texto);
+  toast.appendChild(botaoFechar);
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("animate-fade-out");
+    setTimeout(() => container.removeChild(toast), 500);
+  }, 3000);
+}
+
+
+</script>
 </body>
 </html>

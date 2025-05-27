@@ -3,8 +3,8 @@ const router = express.Router();
 const mysql = require('mysql2/promise');
 
 const dbConfig = {
-  host: 'localhost',
-  user: 'gm',
+  host: '0.0.0.0',
+  user: 'gamemaster',
   password: '12345678',
   database: 'pkm',
   ssl: {
@@ -161,14 +161,21 @@ router.post('/pokemons', async (req, res) => {
     resistente6, resistente7, resistente8, resistente9
   } = req.body;
 
+  // Log inicial dos dados recebidos
+  console.log('✅ Dados recebidos para cadastro de Pokémon:', req.body);
+
+  // Verificação de campos obrigatórios
   if (!nome || !numero_pokedex) {
+    console.warn('⚠️ Nome ou número da Pokédex não fornecido');
     return res.status(400).json({ detail: 'Nome e número da Pokédex são obrigatórios.' });
   }
 
   try {
+    console.log('🔌 Conectando ao banco de dados...');
     const connection = await mysql.createConnection(dbConfig);
+    console.log('✅ Conexão bem-sucedida.');
 
-    await connection.execute(`
+    const query = `
       INSERT INTO pokemon (
         nome, numero_pokedex, tipo1, tipo2, evolucao,
         vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
@@ -176,22 +183,34 @@ router.post('/pokemons', async (req, res) => {
         resistente1, resistente2, resistente3, resistente4, resistente5,
         resistente6, resistente7, resistente8, resistente9
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
+    `;
+
+    const valores = [
       nome, numero_pokedex, tipo1, tipo2, evolucao,
       vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
       fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
       resistente1, resistente2, resistente3, resistente4, resistente5,
       resistente6, resistente7, resistente8, resistente9
-    ]);
+    ];
+
+    console.log('📥 Executando query de inserção...');
+    console.log('📄 Valores:', valores);
+
+    const [resultado] = await connection.execute(query, valores);
+
+    console.log('✅ Pokémon cadastrado com sucesso. Resultado da query:', resultado);
 
     await connection.end();
+    console.log('🔌 Conexão encerrada.');
 
     return res.status(201).json({ message: 'Pokémon cadastrado com sucesso!' });
+
   } catch (error) {
-    console.error('Erro ao cadastrar Pokémon:', error);
-    return res.status(500).json({ detail: 'Erro ao cadastrar Pokémon.' });
+    console.error('❌ Erro ao cadastrar Pokémon:', error);
+    return res.status(500).json({ detail: 'Erro ao cadastrar Pokémon.', error: error.message });
   }
 });
+
 
 
 module.exports = router;

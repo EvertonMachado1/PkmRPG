@@ -18,8 +18,8 @@ app.use(session({
 }));
 
   const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'gm',
+    host: '0.0.0.0',
+    user: 'gamemaster',
     password: '12345678',
     database: 'pkm'
   });
@@ -43,7 +43,7 @@ app.post('/admin/login', (req, res) => {
 
   connection.query(
     'SELECT * FROM usuarios WHERE nome = ? AND senha = ?',
-    ['gm', password],
+    ['gamemaster', password],
     (err, results) => {
       if (err) {
         console.error('Erro ao consultar MySQL:', err);
