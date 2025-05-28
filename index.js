@@ -21,7 +21,8 @@ app.use(session({
     host: '0.0.0.0',
     user: 'gamemaster',
     password: '12345678',
-    database: 'pkm'
+    database: 'pkm',
+    ssl: false
   });
 
 app.use(express.urlencoded({ extended: true }));

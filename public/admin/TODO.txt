@@ -1,2 +1,3 @@
 cadastroClass.js
 cadastroItem.js
+cadastroItemPkm.js

@@ -7,9 +7,7 @@ const dbConfig = {
   user: 'gamemaster',
   password: '12345678',
   database: 'pkm',
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: false
 };
 
 router.use(express.json());
