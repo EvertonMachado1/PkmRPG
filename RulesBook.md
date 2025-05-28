@@ -81,7 +81,7 @@ Cada capítulo é um arquivo HTML separado, com esta estrutura base:
 
       <!-- Navegação -->
       <div class="flex justify-between mt-10 text-sm font-semibold">
-        <a href="/livro/cap0.html" class="px-4 py-2 rounded border border-[#c8b68f] bg-[#f1e9d2] hover:bg-[#e6dec4] transition">← Capítulo Anterior</a>
+        <a href="/livro/cap0.html" class="px-4 py-2 rounded border border-[#c8b68f] bg-[#f1e9d2] hover:bg-[#e6dec4] transition">← Anterior</a>
         <a href="/livro/index.html" class="px-4 py-2 rounded border border-[#c8b68f] bg-[#f1e9d2] hover:bg-[#e6dec4] transition">Índice</a>
         <a href="/livro/cap2.html" class="px-4 py-2 rounded border border-[#c8b68f] bg-[#f1e9d2] hover:bg-[#e6dec4] transition">Próximo →</a>
       </div>
