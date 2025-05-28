@@ -1,4 +1,4 @@
-cadastroClass.js
+API para cadastroClass.js
 cadastroItem.js
 cadastroItemPkm.js
 cadastroPkball.js
