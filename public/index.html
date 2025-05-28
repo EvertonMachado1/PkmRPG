@@ -31,8 +31,12 @@
     Jogar!
   </button>
 
-  <button id="btnAdmin" onclick="window.location.href='/admin/login.html'" disabled class="cursor-pointer w-48 py-3 text-white bg-green-600 rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
+  <button id="btnAdmin" onclick="window.location.href='/admin/login.html'" disabled class="cursor-pointer w-48 py-3 mb-5 text-white bg-green-600 rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
     Admin
+  </button>
+
+  <button id="btnLivro" onclick="window.location.href='/livro/index.html'" disabled class="cursor-pointer w-48 py-3 text-white bg-orange-600 rounded hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition">
+    Livro
   </button>
 
   <!-- Modal -->
@@ -57,6 +61,7 @@
     document.getElementById('termsModal').style.display = 'none';
     document.getElementById('btnUser').disabled = false;
     document.getElementById('btnAdmin').disabled = false;
+    document.getElementById('btnLivro').disabled = false;
   }
 
   // Carregar o arquivo Markdown e converter para HTML

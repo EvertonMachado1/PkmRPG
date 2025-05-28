@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Título do Capítulo</title>
+  <link href="../css/output.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background-color: #f5f1e1;
+      color: #3b2f2f;
+    }
+    .paper {
+      background-color: #fdfaf3;
+      border: 2px solid #d6c7a1;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(180, 158, 125, 0.4);
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body class="p-10">
+  <div class="max-w-4xl mx-auto py-12 px-4 border-4 border-[#b49e7d] rounded-3xl shadow-xl bg-[#eae3cd]">
+    <div class="paper">
+
+      <!-- Título principal do capítulo -->
+      <h1 class="text-4xl font-bold mb-6 text-center">Título do Capítulo</h1>
+
+      <!-- Título secundário -->
+      <h2 class="text-2xl font-semibold mb-4">Seção Exemplo</h2>
+
+      <!-- Texto do parágrafo -->
+      <p class="mb-6 leading-relaxed text-lg">
+        Aqui vai o texto do seu capítulo. Use parágrafos claros, bem espaçados para facilitar a leitura.
+      </p>
+
+      <!-- Imagem à esquerda com texto -->
+      <div class="flex items-center gap-4 mb-6 text-center">
+        <img src="/imagens/exemplo.jpg" alt="Imagem a esquerda" class="w-48 rounded border border-[#c8b68f]" />
+        <p class="leading-relaxed text-lg">
+          Texto que acompanha a imagem, alinhado ao lado dela, explicando o conteúdo relacionado.
+        </p>
+      </div>
+
+        <!-- Imagem à direita com texto -->
+        <div class="flex flex-row-reverse items-center gap-4 mb-6 text-center">
+            <img src="/imagens/exemplo.jpg" alt="Imagem a direita" class="w-48 rounded border border-[#c8b68f]" />
+            <p class="leading-relaxed text-lg">
+                Texto que acompanha a imagem, alinhado ao lado dela, explicando o conteúdo relacionado.
+            </p>
+        </div>
+
+      <!-- Imagem centralizada -->
+      <div class="mb-6 text-center">
+        <img src="/imagens/exemplo-centro.jpg" alt="Imagem centralizada" class="inline-block w-64 rounded border border-[#c8b68f]" />
+      </div>
+
+      <!-- Lista ordenada -->
+      <ol class="list-decimal pl-6 mb-6 text-lg">
+        <li>Primeiro passo do processo.</li>
+        <li>Segundo passo do processo.</li>
+      </ol>
+
+      <!-- Bloco de código / dica -->
+      <pre class="bg-[#f1e9d2] p-4 rounded border border-[#c8b68f] mb-6 overflow-x-auto">
+        Rolagem de dado: d20 + modificador
+      </pre>
+
+      <!-- Navegação -->
+      <div class="flex justify-between mt-10 text-sm font-semibold">
+        <a href="/livro/cap0.html" class="px-4 py-2 rounded border border-[#c8b68f] bg-[#f1e9d2] hover:bg-[#e6dec4] transition">← Capítulo Anterior</a>
+        <a href="/livro/index.html" class="px-4 py-2 rounded border border-[#c8b68f] bg-[#f1e9d2] hover:bg-[#e6dec4] transition">Índice</a>
+        <a href="/livro/cap2.html" class="px-4 py-2 rounded border border-[#c8b68f] bg-[#f1e9d2] hover:bg-[#e6dec4] transition">Próximo →</a>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
