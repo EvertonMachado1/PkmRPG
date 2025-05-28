@@ -1,3 +1,5 @@
 cadastroClass.js
 cadastroItem.js
 cadastroItemPkm.js
+cadastroPkball.js
+cadastroPot.js
