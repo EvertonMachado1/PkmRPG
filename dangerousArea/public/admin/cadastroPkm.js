@@ -1,6 +1,11 @@
 function mostrarFormularioPokemon() {
   const conteudo = `
     <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-3xl mx-auto">
+     <button type="button" onclick="fecharFormulario()" class="absolute top-2 right-2 text-white text-xl font-bold hover:text-red-500">
+      ×
+    </button>
+
+
       <h1 class="text-2xl font-bold mb-6 text-center text-white">Cadastrar Novo Pokémon</h1>
 
       <div class="grid grid-cols-2 gap-4 mb-4">
@@ -17,20 +22,6 @@ function mostrarFormularioPokemon() {
         <input type="number" id="vel" placeholder="Velocidade" class="p-2 rounded bg-gray-700 text-white" />
       </div>
 
-      <h2 class="text-lg font-semibold text-white mb-2">Fraquezas:</h2>
-      <div class="grid grid-cols-3 gap-2 mb-4">
-        ${[...Array(9)].map(() =>
-          `<select class="fraco p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>`
-        ).join('')}
-      </div>
-
-      <h2 class="text-lg font-semibold text-white mb-2">Resistências:</h2>
-      <div class="grid grid-cols-3 gap-2 mb-4">
-        ${[...Array(9)].map(() =>
-          `<select class="forte p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>`
-        ).join('')}
-      </div>
-
       <button onclick="salvarPokemon()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded w-full text-white font-semibold">
         Salvar Pokémon
       </button>
@@ -43,8 +34,6 @@ function mostrarFormularioPokemon() {
   // Carrega os tipos para os selects
   carregarTipos("tipo1");
   carregarTipos("tipo2");
-  document.querySelectorAll(".fraco").forEach(el => carregarTipos(null, el));
-  document.querySelectorAll(".forte").forEach(el => carregarTipos(null, el));
 }
 
 function carregarTipos(id = null, el = null) {
@@ -69,16 +58,13 @@ async function salvarPokemon() {
 
   const tipo1 = document.getElementById("tipo1").value;
   const tipo2 = document.getElementById("tipo2").value || null;
-  const evolucao = document.getElementById("evolucao").value.trim();
+  const evolucao = document.getElementById("evolucao").value.trim() || "N/A";
   const vida = parseInt(document.getElementById("vidaPoke").value) || 0;
   const ataque = parseInt(document.getElementById("atk").value) || 0;
   const defesa = parseInt(document.getElementById("def").value) || 0;
   const ataque_especial = parseInt(document.getElementById("atk_esp").value) || 0;
   const defesa_especial = parseInt(document.getElementById("def_esp").value) || 0;
   const velocidade = parseInt(document.getElementById("vel").value) || 0;
-
-  const fracos = [...document.querySelectorAll(".fraco")].map(f => f.value || null);
-  const fortes = [...document.querySelectorAll(".forte")].map(f => f.value || null);
 
   const mensagem = document.getElementById("mensagemPokemon");
 
@@ -98,25 +84,7 @@ async function salvarPokemon() {
     defesa,
     ataque_especial,
     defesa_especial,
-    velocidade,
-    fraco1: fracos[0],
-    fraco2: fracos[1],
-    fraco3: fracos[2],
-    fraco4: fracos[3],
-    fraco5: fracos[4],
-    fraco6: fracos[5],
-    fraco7: fracos[6],
-    fraco8: fracos[7],
-    fraco9: fracos[8],
-    resistente1: fortes[0],
-    resistente2: fortes[1],
-    resistente3: fortes[2],
-    resistente4: fortes[3],
-    resistente5: fortes[4],
-    resistente6: fortes[5],
-    resistente7: fortes[6],
-    resistente8: fortes[7],
-    resistente9: fortes[8],
+    velocidade
   };
 
   try {
@@ -128,6 +96,11 @@ async function salvarPokemon() {
 
     if (res.ok) {
       mostrarToast("✅ Pokémon cadastrado com sucesso!", "sucesso");
+
+      // Aguarda 2 segundos e recarrega a página
+      setTimeout(() => {
+        fecharFormulario();
+      }, 2000);
     } else {
       const erro = await res.json();
       mostrarToast("❌ Erro ao salvar Pokémon.", "erro");
@@ -136,3 +109,15 @@ async function salvarPokemon() {
     mostrarToast("❌ Erro ao comunicar com servidor");
   }
 }
+
+function fecharFormulario() {
+  localStorage.setItem("reabrirFormularioPokemon", "true");
+  location.reload();
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("reabrirFormularioPokemon") === "true") {
+    localStorage.removeItem("reabrirFormularioPokemon");
+    mostrarFormularioPokemon(); // reabre o formulário após o reload
+  }
+});

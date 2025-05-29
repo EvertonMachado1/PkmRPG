@@ -154,9 +154,6 @@ router.post('/pokemons', async (req, res) => {
     ataque_especial,
     defesa_especial,
     velocidade,
-    fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
-    resistente1, resistente2, resistente3, resistente4, resistente5,
-    resistente6, resistente7, resistente8, resistente9
   } = req.body;
 
   // Log inicial dos dados recebidos
@@ -176,19 +173,13 @@ router.post('/pokemons', async (req, res) => {
     const query = `
       INSERT INTO pokemon (
         nome, numero_pokedex, tipo1, tipo2, evolucao,
-        vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
-        fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
-        resistente1, resistente2, resistente3, resistente4, resistente5,
-        resistente6, resistente7, resistente8, resistente9
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        vida, ataque, defesa, ataque_especial, defesa_especial, velocidade
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const valores = [
       nome, numero_pokedex, tipo1, tipo2, evolucao,
-      vida, ataque, defesa, ataque_especial, defesa_especial, velocidade,
-      fraco1, fraco2, fraco3, fraco4, fraco5, fraco6, fraco7, fraco8, fraco9,
-      resistente1, resistente2, resistente3, resistente4, resistente5,
-      resistente6, resistente7, resistente8, resistente9
+      vida, ataque, defesa, ataque_especial, defesa_especial, velocidade
     ];
 
     console.log('📥 Executando query de inserção...');
