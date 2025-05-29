@@ -210,7 +210,7 @@ router.get('/pokelista', async (req, res) => {
              vida, ataque, defesa, ataque_especial, defesa_especial, velocidade
       FROM pokemon
       ORDER BY numero_pokedex ASC
-    `);
+    `); // Ordena por numero da pokedex de forma ascendente
     await connection.end();
     res.json(pokemons);
   } catch (error) {
