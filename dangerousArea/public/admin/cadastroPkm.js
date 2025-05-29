@@ -9,12 +9,7 @@ function mostrarFormularioPokemon() {
 
       <!-- Formulário de cadastro -->
       <div class="w-1/2 bg-gray-800 p-6 rounded-xl shadow relative">
-        <button type="button" onclick="fecharFormulario()" class="absolute top-2 right-2 text-white text-xl font-bold hover:text-red-500">
-          ×
-        </button>
-
         <h1 class="text-2xl font-bold mb-6 text-center text-white">Cadastrar Novo Pokémon</h1>
-bulbapedia
         <div class="grid grid-cols-2 gap-4 mb-4">
           <input id="nomePoke" placeholder="Nome" class="p-2 rounded bg-gray-700 text-white" />
           <input type="number" id="numPoke" placeholder="Nº Pokédex" class="p-2 rounded bg-gray-700 text-white" required />
