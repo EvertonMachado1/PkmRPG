@@ -154,6 +154,7 @@ router.post('/pokemons', async (req, res) => {
     ataque_especial,
     defesa_especial,
     velocidade,
+    descricao
   } = req.body;
 
   // Log inicial dos dados recebidos
@@ -173,13 +174,13 @@ router.post('/pokemons', async (req, res) => {
     const query = `
       INSERT INTO pokemon (
         nome, numero_pokedex, tipo1, tipo2, evolucao,
-        vida, ataque, defesa, ataque_especial, defesa_especial, velocidade
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        vida, ataque, defesa, ataque_especial, defesa_especial, velocidade, descricao
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const valores = [
       nome, numero_pokedex, tipo1, tipo2, evolucao,
-      vida, ataque, defesa, ataque_especial, defesa_especial, velocidade
+      vida, ataque, defesa, ataque_especial, defesa_especial, velocidade, descricao
     ];
 
     console.log('📥 Executando query de inserção...');
@@ -200,6 +201,23 @@ router.post('/pokemons', async (req, res) => {
   }
 });
 
+// Lista de pokemon cadastrado
+router.get('/pokelista', async (req, res) => {
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+    const [pokemons] = await connection.execute(`
+      SELECT id, nome, numero_pokedex, tipo1, tipo2, evolucao,
+             vida, ataque, defesa, ataque_especial, defesa_especial, velocidade
+      FROM pokemon
+      ORDER BY numero_pokedex ASC
+    `);
+    await connection.end();
+    res.json(pokemons);
+  } catch (error) {
+    console.error('Erro ao listar Pokémons:', error);
+    res.status(500).json({ detail: 'Erro ao listar Pokémons.' });
+  }
+});
 
 
 module.exports = router;

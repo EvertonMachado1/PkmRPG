@@ -1,40 +1,49 @@
 function mostrarFormularioPokemon() {
   const conteudo = `
-    <div class="bg-gray-800 p-6 rounded-xl shadow w-full max-w-3xl mx-auto">
-     <button type="button" onclick="fecharFormulario()" class="absolute top-2 right-2 text-white text-xl font-bold hover:text-red-500">
-      ×
-    </button>
-
-
-      <h1 class="text-2xl font-bold mb-6 text-center text-white">Cadastrar Novo Pokémon</h1>
-
-      <div class="grid grid-cols-2 gap-4 mb-4">
-        <input id="nomePoke" placeholder="Nome" class="p-2 rounded bg-gray-700 text-white" />
-        <input type="number" id="numPoke" placeholder="Nº Pokédex" class="p-2 rounded bg-gray-700 text-white" required />
-        <select id="tipo1" class="p-2 rounded bg-gray-700 text-white"></select>
-        <select id="tipo2" class="p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>
-        <input id="evolucao" placeholder="Evolução" class="p-2 rounded bg-gray-700 text-white" />
-        <input type="number" id="vidaPoke" placeholder="Vida" class="p-2 rounded bg-gray-700 text-white" />
-        <input type="number" id="atk" placeholder="Ataque" class="p-2 rounded bg-gray-700 text-white" />
-        <input type="number" id="def" placeholder="Defesa" class="p-2 rounded bg-gray-700 text-white" />
-        <input type="number" id="atk_esp" placeholder="Ataque Especial" class="p-2 rounded bg-gray-700 text-white" />
-        <input type="number" id="def_esp" placeholder="Defesa Especial" class="p-2 rounded bg-gray-700 text-white" />
-        <input type="number" id="vel" placeholder="Velocidade" class="p-2 rounded bg-gray-700 text-white" />
+    <div class="flex gap-6 w-full">
+      <!-- Lista de Pokémons -->
+      <div class="w-[400px] bg-gray-800 p-4 rounded-xl overflow-y-auto max-h-[80vh]">
+        <h2 class="text-xl font-bold mb-4">Pokémons Cadastrados</h2>
+        <div id="listaPokemons" class="space-y-2"></div>
       </div>
 
-      <button onclick="salvarPokemon()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded w-full text-white font-semibold">
-        Salvar Pokémon
-      </button>
-      <p id="mensagemPokemon" class="mt-4 text-center text-white"></p>
+      <!-- Formulário de cadastro -->
+      <div class="w-1/2 bg-gray-800 p-6 rounded-xl shadow relative">
+        <button type="button" onclick="fecharFormulario()" class="absolute top-2 right-2 text-white text-xl font-bold hover:text-red-500">
+          ×
+        </button>
+
+        <h1 class="text-2xl font-bold mb-6 text-center text-white">Cadastrar Novo Pokémon</h1>
+bulbapedia
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <input id="nomePoke" placeholder="Nome" class="p-2 rounded bg-gray-700 text-white" />
+          <input type="number" id="numPoke" placeholder="Nº Pokédex" class="p-2 rounded bg-gray-700 text-white" required />
+          <select id="tipo1" class="p-2 rounded bg-gray-700 text-white"></select>
+          <select id="tipo2" class="p-2 rounded bg-gray-700 text-white"><option value="">Nenhum</option></select>
+          <input id="evolucao" placeholder="Evolução" class="p-2 rounded bg-gray-700 text-white" />
+          <input type="number" id="vidaPoke" placeholder="Vida" class="p-2 rounded bg-gray-700 text-white" />
+          <input type="number" id="atk" placeholder="Ataque" class="p-2 rounded bg-gray-700 text-white" />
+          <input type="number" id="def" placeholder="Defesa" class="p-2 rounded bg-gray-700 text-white" />
+          <input type="number" id="atk_esp" placeholder="Ataque Especial" class="p-2 rounded bg-gray-700 text-white" />
+          <input type="number" id="def_esp" placeholder="Defesa Especial" class="p-2 rounded bg-gray-700 text-white" />
+          <input type="number" id="vel" placeholder="Velocidade" class="p-2 rounded bg-gray-700 text-white" />
+          <textarea id="descricao" placeholder="Descrição" rows="4" class="p-2 rounded bg-gray-700 text-white col-span-2 resize-none"></textarea>
+        </div>
+
+        <button onclick="salvarPokemon()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded w-full text-white font-semibold">
+          Salvar Pokémon
+        </button>
+        <p id="mensagemPokemon" class="mt-4 text-center text-white"></p>
+      </div>
     </div>
   `;
 
   document.getElementById("conteudoCentral").innerHTML = conteudo;
-
-  // Carrega os tipos para os selects
   carregarTipos("tipo1");
   carregarTipos("tipo2");
+  carregarListaPokemons();
 }
+
 
 function carregarTipos(id = null, el = null) {
   const tipos = [
@@ -66,7 +75,9 @@ async function salvarPokemon() {
   const defesa_especial = parseInt(document.getElementById("def_esp").value) || 0;
   const velocidade = parseInt(document.getElementById("vel").value) || 0;
 
-  const mensagem = document.getElementById("mensagemPokemon");
+  const descricao = document.getElementById("descricao").value.trim();
+
+  const mensagem = document.getElementById("mensagemPokemon") || "N/A";
 
   if (!nome || isNaN(numero_pokedex)) {
     mostrarToast("❌ Nome e Nº Pokédex são obrigatórios e devem ser válidos.");
@@ -121,3 +132,28 @@ window.addEventListener("DOMContentLoaded", () => {
     mostrarFormularioPokemon(); // reabre o formulário após o reload
   }
 });
+
+async function carregarListaPokemons() {
+  try {
+    const res = await fetch("/api/pokemons");
+    if (res.ok) {
+      const pokemons = await res.json();
+      const container = document.getElementById("listaPokemons");
+
+      if (!container) return;
+
+      container.innerHTML = pokemons.map(poke => `
+        <div class="bg-gray-700 p-3 rounded mb-2">
+          <p class="font-bold text-white">${poke.nome}</p>
+          <p class="text-sm text-gray-300">${poke.tipo1}${poke.tipo2 ? ' / ' + poke.tipo2 : ''}</p>
+          <p class="text-sm text-gray-400">Pokédex Nº: ${poke.numero_pokedex}</p>
+        </div>
+      `).join("");
+    } else {
+      mostrarToast("❌ Erro ao carregar lista de Pokémon.");
+    }
+  } catch (err) {
+    mostrarToast("❌ Erro ao comunicar com servidor");
+  }
+}
+

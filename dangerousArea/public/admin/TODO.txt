@@ -3,3 +3,4 @@ cadastroItem.js
 cadastroItemPkm.js
 cadastroPkball.js
 cadastroPot.js
+Funções de editar e excluir pokemons no listaPokemons.js
