@@ -39,6 +39,8 @@ function mostrarFormularioPokemon() {
   carregarListaPokemons();
 }
 
+window.pokemonEditando = null; // para rastrear se estamos editando
+
 
 function carregarTipos(id = null, el = null) {
   const tipos = [
