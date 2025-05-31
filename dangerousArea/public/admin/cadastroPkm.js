@@ -70,9 +70,9 @@ async function salvarPokemon() {
   const defesa_especial = parseInt(document.getElementById("def_esp").value) || 0;
   const velocidade = parseInt(document.getElementById("vel").value) || 0;
 
-  const descricao = document.getElementById("descricao").value.trim();
+  const descricao = document.getElementById("descricao").value.trim() || "N/A";
 
-  const mensagem = document.getElementById("mensagemPokemon") || "N/A";
+  const mensagem = document.getElementById("mensagemPokemon");
 
   if (!nome || isNaN(numero_pokedex)) {
     mostrarToast("❌ Nome e Nº Pokédex são obrigatórios e devem ser válidos.");
@@ -90,7 +90,8 @@ async function salvarPokemon() {
     defesa,
     ataque_especial,
     defesa_especial,
-    velocidade
+    velocidade,
+    descricao
   };
 
   try {
